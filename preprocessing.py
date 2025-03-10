@@ -8,6 +8,7 @@ from outetts.wav_tokenizer.decoder import WavTokenizer
 from outetts.wav_tokenizer.encoder.utils import convert_audio
 from tqdm import tqdm
 import argparse
+from huggingface_hub import HfApi
 
 def preprocess_dataset(
     dataset_name: str,
@@ -93,6 +94,28 @@ def preprocess_dataset(
             arr[:] = np.array(all_sequences, dtype=np.int32)
             arr.flush()
             np.save(shape_path, np.array([len(all_sequences), max_length]))
+
+        # Create datasets- hub
+        api = HfApi()
+
+        # if the repo doesn't exist, create it
+        if not api.repo_exists(f"Steveeeeeeen/{output_dir}"):
+            api.create_repo(f"Steveeeeeeen/{output_dir}", repo_type="dataset")
+
+        api.upload_file(
+            repo_id=f"Steveeeeeeen/{output_dir}",
+            path_in_repo=f"{split}_input_ids.memmap",
+            path_or_fileobj=memmap_path,
+            repo_type="dataset"
+        )
+        api.upload_file(
+            repo_id=f"Steveeeeeeen/{output_dir}",
+            path_in_repo=f"{split}_input_ids_shape.npy",
+            path_or_fileobj=shape_path,
+            repo_type="dataset"
+        )
+        
+        print(f"Uploaded {split} to datasets- hub") 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process audio dataset using WavTokenizer')
