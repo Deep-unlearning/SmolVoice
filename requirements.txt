@@ -1,0 +1,9 @@
+torch
+torchaudio
+outetts
+bitsandbytes
+transformers
+datasets
+tqdm
+wandb
+liger_kernel
