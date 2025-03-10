@@ -98,7 +98,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process audio dataset using WavTokenizer')
 
     parser.add_argument('--dataset_name', type=str, default="parler-tts/mls_eng_10k")
-    parser.add_argument('--dataset_subset', type=str, default="")
+    parser.add_argument('--dataset_subset', type=str)
     parser.add_argument('--output_dir', type=str, default="mls_eng_10k")
     parser.add_argument('--tokenizer_name', type=str, default="HuggingFaceTB/SmolLM2-360M-Instruct")
     parser.add_argument('--wav_tokenizer_model_path', type=str,
