@@ -11,6 +11,7 @@ import argparse
 
 def preprocess_dataset(
     dataset_name: str,
+    dataset_subset: str,
     output_dir: str,
     tokenizer_name: str = "HuggingFaceTB/SmolLM2-360M-Instruct",
     wav_tokenizer_model_path: str = "wavtokenizer_large_speech_320_v2.ckpt",
@@ -21,7 +22,7 @@ def preprocess_dataset(
     subset_ratio: float = 1.0
 ):
     print("Loading dataset...")
-    dataset = load_dataset(dataset_name)
+    dataset = load_dataset(dataset_name, dataset_subset, trust_remote_code=True)
 
     splits = dataset.keys()
     print(f"Found splits: {splits}")
@@ -96,8 +97,9 @@ def preprocess_dataset(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process audio dataset using WavTokenizer')
 
-    parser.add_argument('--dataset_name', type=str, default="ylacombe/expresso")
-    parser.add_argument('--output_dir', type=str, default="expresso")
+    parser.add_argument('--dataset_name', type=str, default="parler-tts/mls_eng_10k")
+    parser.add_argument('--dataset_subset', type=str, default="")
+    parser.add_argument('--output_dir', type=str, default="mls_eng_10k")
     parser.add_argument('--tokenizer_name', type=str, default="HuggingFaceTB/SmolLM2-360M-Instruct")
     parser.add_argument('--wav_tokenizer_model_path', type=str,
                         default="wavtokenizer_large_speech_320_v2.ckpt")
@@ -112,6 +114,7 @@ if __name__ == "__main__":
 
     preprocess_dataset(
         dataset_name=args.dataset_name,
+        dataset_subset=args.dataset_subset,
         output_dir=args.output_dir,
         tokenizer_name=args.tokenizer_name,
         wav_tokenizer_model_path=args.wav_tokenizer_model_path,
