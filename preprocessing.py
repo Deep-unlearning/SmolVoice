@@ -45,6 +45,10 @@ def preprocess_dataset(
     wavtokenizer = WavTokenizer.from_pretrained0802(wav_tokenizer_config_path, wav_tokenizer_model_path)
     wavtokenizer = wavtokenizer.to(device).eval()
 
+    # Create datasets- hub
+    api = HfApi()
+    api.create_repo(f"Steveeeeeeen/{output_dir}", repo_type="dataset")
+
     for split in splits:
         split_data = dataset[split]
 
@@ -60,7 +64,7 @@ def preprocess_dataset(
 
         all_sequences = []
         for idx, example in tqdm(enumerate(split_data), total=len(split_data)):
-            text = f"<|TEXT_UNDERSTANDING_START|>{example['text']}<|TEXT_UNDERSTANDING_END|>"
+            text = f"<|TEXT_UNDERSTANDING_START|>{example['transcript']}<|TEXT_UNDERSTANDING_END|>"
             text_ids = tokenizer.encode(text, add_special_tokens=False)
 
             waveform = torch.tensor(example["audio"]["array"]).float().unsqueeze(0)
@@ -94,13 +98,6 @@ def preprocess_dataset(
             arr[:] = np.array(all_sequences, dtype=np.int32)
             arr.flush()
             np.save(shape_path, np.array([len(all_sequences), max_length]))
-
-        # Create datasets- hub
-        api = HfApi()
-
-        # if the repo doesn't exist, create it
-        if not api.repo_exists(f"Steveeeeeeen/{output_dir}"):
-            api.create_repo(f"Steveeeeeeen/{output_dir}", repo_type="dataset")
 
         api.upload_file(
             repo_id=f"Steveeeeeeen/{output_dir}",
