@@ -119,7 +119,6 @@ class TTSDataset(Dataset):
                     {'role': 'assistant', 'content': '<|SPEECH_GENERATION_START|>'}
                 ]
                 prompt_ids = self.tokenizer.apply_chat_template(prompt, tokenize=True)
-                
                 # Extract text and speech content
                 text_content = input_ids[text_start:text_end+1]  # Including the end token
                 speech_content = input_ids[speech_start:speech_end+1]  # Including the end token
@@ -132,7 +131,6 @@ class TTSDataset(Dataset):
                 input_ids = self.pad_to_max_length(torch.tensor(prompt_ids, dtype=torch.long), self.pad_token_id)
                 labels = self.create_labels(input_ids)
                 attention_mask = (input_ids != self.pad_token_id).long()
-                
                 return {'input_ids': input_ids, 'attention_mask': attention_mask, 'labels': labels}
                 
             except Exception as e:
