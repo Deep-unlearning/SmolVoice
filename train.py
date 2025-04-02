@@ -37,7 +37,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(
         model_args.llm_model_name_or_path,
         model_max_length=training_args.model_max_length,
-        padding_side="right",
+        padding_side="left",
     )
     # For this example, we force a pad_token_id if necessary.
     tokenizer.pad_token_id = 2
