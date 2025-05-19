@@ -4,8 +4,8 @@ from datasets import load_dataset
 import torch
 import torchaudio
 from transformers import AutoTokenizer
-from outetts.wav_tokenizer.decoder import WavTokenizer
-from outetts.wav_tokenizer.encoder.utils import convert_audio
+from decoder import WavTokenizer
+from encoder.utils import convert_audio
 from tqdm import tqdm
 import argparse
 from huggingface_hub import HfApi
